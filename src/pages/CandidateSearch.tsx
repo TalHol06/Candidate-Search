@@ -1,11 +1,21 @@
 import { useState, useEffect } from 'react';
 import { searchGithub, searchGithubUser } from '../api/API';
 import Candidate from '../interfaces/Candidate.interface';
+import { useArray } from '../components/PotentialCandidates';
 
 const CandidateSearch = () => {
   const [githubUsers, setGitHubUsers] = useState<Candidate[]>([]);
   const [count, setCount] = useState(0);
   const [githubUser, setUser] = useState<Candidate | null>(null);
+  const { setCandidatesArray } = useArray();
+
+  function addCandidate(){
+    if (githubUser && count < githubUsers.length){
+    setCandidatesArray((prevArray) => [...prevArray, githubUser]);
+    setCount((prev) => prev + 1);
+    }
+
+  }
 
   useEffect(() => {
     const fetchGithubUsers = async () => {
@@ -68,7 +78,7 @@ const CandidateSearch = () => {
       </div>
 
       <button onClick={() => setCount((prev) => prev + 1)}>-</button>
-      <button onClick={() => setCount((prev) => prev + 1)}>+</button>
+      <button onClick={addCandidate}>+</button>
     </main>
   );
 };
